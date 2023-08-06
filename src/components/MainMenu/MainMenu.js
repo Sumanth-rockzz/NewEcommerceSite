@@ -11,6 +11,7 @@ import {
   Input,
   Button,
   Checkbox,
+  message,
 } from "antd";
 import { getCart } from "../../API/API";
 import "../../App.css";
@@ -126,6 +127,11 @@ const AppCart = () => {
 
   const onConfirmOrder = (values) => {
     console.log({ values });
+    setOrderDrawerOpen(!orderDrawerOpen);
+    setCartDrawerOpen(!cartDrawerOpen);
+    message.success(
+      "Order has been placed successfully and will be Delivered in 30 Min"
+    );
   };
 
   return (
@@ -238,7 +244,7 @@ const AppCart = () => {
             </Checkbox>
           </Form.Item>
           <Typography.Paragraph>
-            More Payment Option Coming Soon...{" "}
+            More Payment Options Are Coming Soon...{" "}
           </Typography.Paragraph>
           <Button type="primary" htmlType="submit">
             Confirm Order
