@@ -1,0 +1,30 @@
+.App{
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+}
+.AppHeader{
+    height: 60px;
+}
+.MainMenuHorizontal{
+    font-weight: bold;
+}
+.PageContent{
+    display: flex;
+    flex:1;
+    overflow-y: auto;
+    
+}
+.AppFooter{
+    height: 60px;
+    background-color: black;
+}
+.itemCartImage{
+    height: 150px !important;
+    object-fit: scale-down;
+}
+.itemCard,.itemCardBadge{
+    margin: 10px;
+}
+
