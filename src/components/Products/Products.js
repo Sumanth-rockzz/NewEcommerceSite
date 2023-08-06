@@ -14,6 +14,7 @@ import {
   Rate,
   Button,
   message,
+  Select,
 } from "antd";
 import "../../App.css";
 
@@ -21,6 +22,7 @@ const Products = () => {
   const { categoryId } = useParams();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [sortOrder, setSortOrder] = useState("az");
 
   useEffect(() => {
     setLoading(true);
@@ -32,12 +34,78 @@ const Products = () => {
     );
   }, [categoryId]);
 
+  //   const getSortedItems = () => {
+  //     const sortedItems = [...items];
+  //     sortedItems.sort((a, b) => {
+  //       if (sortOrder === "az") {
+  //         return a.title > b.title ? 1 : a.title === b.title ? 0 : -1;
+  //       } else if (sortOrder === "za") {
+  //         return a.title < b.title ? 1 : a.title === b.title ? 0 : -1;
+  //       } else if (sortOrder === "lowHigh") {
+  //         return a.price > b.price ? 1 : a.price === b.price ? 0 : -1;
+  //       } else if (sortOrder === "highLow") {
+  //         return a.price < b.price ? 1 : a.price === b.price ? 0 : -1;
+  //       }
+  //     });
+  //     return sortedItems;
+  //   };
+  const getSortedItems = () => {
+    const sortedItems = [...items];
+    sortedItems.sort((a, b) => {
+      let comparison = 0;
+
+      if (sortOrder === "az" || sortOrder === "za") {
+        comparison = a.title.localeCompare(b.title);
+      } else if (sortOrder === "highLow" || sortOrder === "lowHigh") {
+        comparison = a.price - b.price;
+      }
+
+      if (sortOrder === "za" || sortOrder === "lowHigh") {
+        comparison *= -1; // Reverse the comparison for descending order
+      }
+
+      return comparison;
+    });
+
+    return sortedItems;
+  };
+
   return (
-    <div>
+    <div className="productsContainer">
+      <div>
+        <h3>
+          <Typography.Text>Vew Items Sorted By : </Typography.Text>
+          <Select
+            defaultValue={"az"}
+            onChange={(value) => {
+              setSortOrder(value);
+            }}
+            options={[
+              {
+                label: "Alphabetically a-z",
+                value: "az",
+              },
+              {
+                label: "Alphabetically z-a",
+                value: "za",
+              },
+              {
+                label: "Price Low to High",
+                value: "lowHigh",
+              },
+              {
+                label: "Price High to Low",
+                value: "highLow",
+              },
+            ]}
+          ></Select>
+        </h3>
+      </div>
+
       <List
         loading={loading}
         grid={{ column: 3 }}
-        dataSource={items}
+        dataSource={getSortedItems()}
         renderItem={(item, index) => {
           return (
             <Badge.Ribbon

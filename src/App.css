@@ -9,20 +9,27 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-
+    box-shadow: 1px 4px 4px #00000033;
 }
 .MainMenuHorizontal{
     font-weight: bold;
+    border: unset;
+
 }
 .PageContent{
     display: flex;
     flex:1;
     overflow-y: auto;
+    margin-top: 3px;
     
 }
 .AppFooter{
     height: 60px;
-    background-color: black;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    box-shadow: 1px -4px 4px #00000033;
+
 }
 .itemCartImage{
     height: 150px !important;
@@ -36,5 +43,7 @@
     margin-right: 20px;
     cursor: pointer;
 }
-
+.productsContainer{
+    padding: 8px;
+}
 
