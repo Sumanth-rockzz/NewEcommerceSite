@@ -1,11 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Menu, Typography } from "antd";
 import {
-  AppstoreOutlined,
+  Menu,
+  Typography,
+  Badge,
+  Drawer,
+  Table,
+  Form,
+  InputNumber,
+  Input,
+  Button,
+  Checkbox,
+} from "antd";
+import { getCart } from "../../API/API";
+import "../../App.css";
+import {
   ShopOutlined,
   ShoppingCartOutlined,
-  UserOutlined,
   HomeFilled,
   WomanOutlined,
   ManOutlined,
@@ -82,12 +93,158 @@ const MainMenu = () => {
             ],
           },
           {
-            label: "Accessories",
+            label: "Fragrances",
             icon: <ShopOutlined />,
-            key: "/accessories",
+            key: "/fragrances",
           },
         ]}
       />
+      <Typography.Title style={{ marginTop: "10px" }}>
+        InstaMart
+      </Typography.Title>
+      <AppCart />
+    </div>
+  );
+};
+const AppCart = () => {
+  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
+  const [orderDrawerOpen, setOrderDrawerOpen] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    getCart().then((res) => {
+      setCartItems(res.products);
+    });
+  }, []);
+
+  const CartHandler = () => {
+    setCartDrawerOpen(!cartDrawerOpen);
+  };
+  const orderHandler = () => {
+    setOrderDrawerOpen(!orderDrawerOpen);
+  };
+
+  const onConfirmOrder = (values) => {
+    console.log({ values });
+  };
+
+  return (
+    <div>
+      <Badge count={7} className="shoppingCartIcon" onClick={CartHandler}>
+        <ShoppingCartOutlined />
+      </Badge>
+      <Drawer
+        open={cartDrawerOpen}
+        onClose={CartHandler}
+        title="Your Cart"
+        contentWrapperStyle={{ width: 600 }}
+        closable
+      >
+        <Table
+          pagination={false}
+          columns={[
+            {
+              title: "Title",
+              dataIndex: "title",
+            },
+            {
+              title: "Price",
+              dataIndex: "price",
+              render: (value) => <span>₹ {value}</span>,
+            },
+            {
+              title: "Quantity",
+              dataIndex: "quantity",
+              render: (value, record) => {
+                return (
+                  <InputNumber
+                    min={0}
+                    defaultValue={value}
+                    onChange={(value) => {
+                      setCartItems((prev) =>
+                        prev.map((cart) => {
+                          if (record.id === cart.id) {
+                            cart.total = cart.price * value;
+                          }
+                          return cart;
+                        })
+                      );
+                    }}
+                  ></InputNumber>
+                );
+              },
+            },
+            {
+              title: "Total",
+              dataIndex: "total",
+            },
+          ]}
+          dataSource={cartItems}
+          summary={(data) => {
+            const total = data.reduce((prev, curr) => prev + curr.total, 0);
+            return <span>Total : {total}</span>;
+          }}
+        ></Table>
+        <Button type="primary" onClick={orderHandler}>
+          Proceed to Checkout
+        </Button>
+      </Drawer>
+      <Drawer
+        open={orderDrawerOpen}
+        onClose={orderHandler}
+        title="Confirm Your Order"
+      >
+        <Form onFinish={onConfirmOrder}>
+          <Form.Item
+            rules={[
+              {
+                required: true,
+                message: "Please Enter Your Full Name",
+              },
+            ]}
+            label="Full Name"
+            name="full_name"
+          >
+            <Input placeholder="Enter Your Full Name" />
+          </Form.Item>
+          <Form.Item
+            rules={[
+              {
+                required: true,
+                type: "email",
+                message: "Please Enter A Valid  Email",
+              },
+            ]}
+            label="Email"
+            name="email"
+          >
+            <Input placeholder="Enter Your Email" />
+          </Form.Item>
+          <Form.Item
+            rules={[
+              {
+                required: true,
+                message: "Please Enter Your Address",
+              },
+            ]}
+            label="Address"
+            name="address"
+          >
+            <Input placeholder="Enter Your Address" />
+          </Form.Item>
+          <Form.Item>
+            <Checkbox checked disabled>
+              Cash on Delivery
+            </Checkbox>
+          </Form.Item>
+          <Typography.Paragraph>
+            More Payment Option Coming Soon...{" "}
+          </Typography.Paragraph>
+          <Button type="primary" htmlType="submit">
+            Confirm Order
+          </Button>
+        </Form>
+      </Drawer>
     </div>
   );
 };

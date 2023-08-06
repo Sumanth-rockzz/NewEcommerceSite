@@ -1,22 +1,41 @@
 import React, { useEffect, useState } from "react";
-import { getAllProducts } from "../../API/API";
-import { Card, List, Image, Typography, Badge, Rate, Button } from "antd";
+import {
+  addToCart,
+  getAllProducts,
+  getProductsByCategory,
+} from "../../API/API";
+import { useParams } from "react-router-dom";
+import {
+  Card,
+  List,
+  Image,
+  Typography,
+  Badge,
+  Rate,
+  Button,
+  message,
+} from "antd";
 import "../../App.css";
 
 const Products = () => {
+  const { categoryId } = useParams();
   const [items, setItems] = useState([]);
-  useEffect(() => {
-    getAllProducts().then((res) => {
-      setItems(res.products);
-    });
-  }, []);
+  const [loading, setLoading] = useState(false);
 
-  const addToCartHandler = () => {
-    console.log("hi");
-  };
+  useEffect(() => {
+    setLoading(true);
+    (categoryId ? getProductsByCategory(categoryId) : getAllProducts()).then(
+      (res) => {
+        setItems(res.products);
+        setLoading(false);
+      }
+    );
+  }, [categoryId]);
+
   return (
     <div>
       <List
+        loading={loading}
         grid={{ column: 3 }}
         dataSource={items}
         renderItem={(item, index) => {
@@ -33,9 +52,7 @@ const Products = () => {
                 cover={<Image className="itemCartImage" src={item.thumbnail} />}
                 actions={[
                   <Rate allowHalf value={item.rating} disabled />,
-                  <Button onClick={addToCartHandler}>
-                    <h4>Add to cart</h4>
-                  </Button>,
+                  <AddToCartButton item={item} />,
                 ]}
               >
                 <Card.Meta
@@ -66,6 +83,22 @@ const Products = () => {
         }}
       ></List>
     </div>
+  );
+};
+
+const AddToCartButton = ({ item }) => {
+  const [loading, setLoading] = useState(false);
+  const addToCartHandler = () => {
+    setLoading(true);
+    addToCart(item.id).then((res) => {
+      message.success(`${item.title} has been added to cart!`);
+      setLoading(false);
+    });
+  };
+  return (
+    <Button type="link" onClick={addToCartHandler} loading={loading}>
+      <h4>Add to cart</h4>
+    </Button>
   );
 };
 

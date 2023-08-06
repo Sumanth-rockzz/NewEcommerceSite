@@ -6,7 +6,7 @@ import Category from "../../Pages/Category/Category";
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/home" element={<HomePage />}></Route>
+      <Route path="/home" element={<Category />}></Route>
       <Route path="/:categoryId" element={<Category />}></Route>
     </Routes>
   );
