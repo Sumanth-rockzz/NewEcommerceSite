@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Menu,
   Typography,
@@ -18,19 +19,56 @@ import "../../App.css";
 import {
   ShopOutlined,
   ShoppingCartOutlined,
+  LoginOutlined,
   HomeFilled,
   WomanOutlined,
   ManOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
+import { authActions } from "../../redux-store/auth-slice";
+
+// const calculateRemainingTime = (expirationTime) => {
+//   const currentTime = new Date().getTime();
+//   const adjExpirationTime = new Date(expirationTime).getTime();
+
+//   const remainingTime = adjExpirationTime - currentTime;
+//   return remainingTime;
+// };
+
+// const retrieveStoredToken = () => {
+//   const storedToken = localStorage.getItem("token");
+//   const storedRemainingDate = localStorage.getItem("expirationTime");
+
+//   const remainingTime = calculateRemainingTime(storedRemainingDate);
+//   if (remainingTime <= 600000) {
+//     return null;
+//   }
+//   return {
+//     token: storedToken,
+//     duration: remainingTime,
+//   };
+// };
 
 const MainMenu = () => {
   const location = useLocation();
-  const [selectedKeys, setSelectedKeys] = useState("/");
+  const dispatch = useDispatch();
+  const [selectedKeys, setSelectedKeys] = useState("/home");
+  const token = useSelector((state) => state.auth.token);
+  const navigate = useNavigate();
+
+  // const tokenData = retrieveStoredToken();
+
+  const isLoggedIn = token;
+  const logoutHandler = () => {
+    dispatch(authActions.logout());
+    localStorage.removeItem("token");
+    localStorage.removeItem("expirationTime");
+    navigate("/login");
+  };
 
   useEffect(() => {
     setSelectedKeys(location.pathname);
   }, [location.pathname]);
-  const navigate = useNavigate();
   return (
     <div className="MainMenu">
       <Menu
@@ -103,6 +141,18 @@ const MainMenu = () => {
       <Typography.Title style={{ marginTop: "10px" }}>
         InstaMart
       </Typography.Title>
+      {!isLoggedIn && (
+        <NavLink to="/signup">
+          <LoginOutlined />
+          {"  "}
+          <b>Register/Login</b>
+        </NavLink>
+      )}
+      {isLoggedIn && (
+        <Button icon={<LogoutOutlined rotate={270} />} onClick={logoutHandler}>
+          Logout
+        </Button>
+      )}
       <AppCart />
     </div>
   );

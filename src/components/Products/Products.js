@@ -15,6 +15,7 @@ import {
   Button,
   message,
   Select,
+  Pagination,
 } from "antd";
 import "../../App.css";
 
@@ -23,16 +24,22 @@ const Products = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [sortOrder, setSortOrder] = useState("az");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [currentLimit, setCurrentLimit] = useState(10);
+  const [totalCount, setTotalCount] = useState(0);
 
   useEffect(() => {
     setLoading(true);
-    (categoryId ? getProductsByCategory(categoryId) : getAllProducts()).then(
-      (res) => {
+    (categoryId
+      ? getProductsByCategory(categoryId, currentLimit, currentPage)
+      : getAllProducts(currentLimit, currentPage)
+    ) //limit and size
+      .then((res) => {
         setItems(res.products);
+        setTotalCount(res.total);
         setLoading(false);
-      }
-    );
-  }, [categoryId]);
+      });
+  }, [categoryId, currentLimit, currentPage]);
 
   //   const getSortedItems = () => {
   //     const sortedItems = [...items];
@@ -60,7 +67,7 @@ const Products = () => {
         comparison = a.price - b.price;
       }
 
-      if (sortOrder === "za" || sortOrder === "lowHigh") {
+      if (sortOrder === "za" || sortOrder === "highLow") {
         comparison *= -1; // Reverse the comparison for descending order
       }
 
@@ -150,6 +157,28 @@ const Products = () => {
           );
         }}
       ></List>
+      <Pagination
+        total={totalCount}
+        pageSize={currentLimit}
+        defaultCurrent={1}
+        current={currentPage}
+        pageSizeOptions={[10, 20, 30]}
+        showSizeChanger
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+        onShowSizeChange={(page, pageSize) => {
+          console.log(pageSize, "....", page);
+          setCurrentLimit(pageSize);
+        }}
+        onChange={(page, pageSize) => {
+          console.log(pageSize, "....", page);
+          setCurrentPage(page);
+        }}
+        pa
+      />
     </div>
   );
 };

@@ -2,14 +2,18 @@ export const getCart = () => {
   return fetch("https://dummyjson.com/carts/1").then((res) => res.json());
 };
 
-export const getProductsByCategory = (category) => {
-  return fetch(`https://dummyjson.com/products/category/${category}`).then(
-    (res) => res.json()
-  );
+export const getProductsByCategory = (category, limit, pageNumber) => {
+  const skip = limit * pageNumber - limit;
+  return fetch(
+    `https://dummyjson.com/products/category/${category}?limit=${limit}&skip=${skip}`
+  ).then((res) => res.json());
 };
 
-export const getAllProducts = () => {
-  return fetch("https://dummyjson.com/products").then((res) => res.json());
+export const getAllProducts = (limit, pageNumber) => {
+  const skip = limit * pageNumber - limit;
+  return fetch(
+    `https://dummyjson.com/products?limit=${limit}&skip=${skip}`
+  ).then((res) => res.json());
 };
 
 export const addToCart = (id) => {

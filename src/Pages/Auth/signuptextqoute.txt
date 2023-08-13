@@ -1,0 +1,7 @@
+ //   <Typography.Paragraph style={{ width: "45%", fontSize: "16px" }}>
+  //   Shop smart, shop easy! Discover a world of convenience and style at your
+  //   fingertips. Welcome to our online store, where every click brings you
+  //   closer to incredible products and unbeatable deals. Your go-to
+  //   destination for all things shopping – it's time to indulge in retail
+  //   therapy, redefined.
+  // </Typography.Paragraph>
