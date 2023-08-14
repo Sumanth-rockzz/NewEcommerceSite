@@ -7,7 +7,7 @@
 .MainMenu{
     height: 60px;
     display: flex;
-    justify-content: space-between;
+    justify-content:space-between;
     align-items: center;
     box-shadow: 1px 4px 4px #00000033;
 }
@@ -21,6 +21,8 @@
     flex:1;
     overflow-y: auto;
     margin-top: 3px;
+    margin-bottom: 3px;
+
     
 }
 .AppFooter{
@@ -45,5 +47,42 @@
 }
 .productsContainer{
     padding: 8px;
-}
 
+}
+.cartDrawer{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-content:space-between;
+    align-items: center;
+    padding: 10px;
+}
+.menuItem,.subMenu{
+    font-size: 1rem;
+    font-weight: bold;
+
+}
+@media screen and (max-width: 768px) {
+    .menuItem{
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+    .subMenu{
+        width: 80px;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+    .ant-table table {
+        font-size: 0.8rem; 
+      }
+    
+      .ant-table-thead th,
+      .ant-table-tbody td {
+        padding: 6px; 
+      }
+      .quantity-input{
+        width:fit-content;
+      }
+    }
+    
+  

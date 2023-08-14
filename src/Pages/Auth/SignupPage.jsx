@@ -36,22 +36,20 @@ const SignupPage = () => {
           return res.json();
         } else {
           return res.json().then((data) => {
-            let errorMsg = "Authentication Failed";
+            let errorMsg = data?.error?.message?.includes("EMAIL_EXISTS")
+              ? "User already exists please login"
+              : "Authentication Failed";
             throw new Error(errorMsg);
           });
         }
       })
       .then((data) => {
-        console.log(data);
-        // const expirationTime = new Date(
-        //   new Date().getTime() + +data.expiresIn * 1000
-        // );
         form.resetFields();
         message.success(" Registered SuccessFully");
         navigate("/login");
       })
       .catch((err) => {
-        message.error(err);
+        message.error(err.message);
       });
   };
 
@@ -131,9 +129,14 @@ const SignupPage = () => {
             },
             {
               validator: (_, value) => {
-                return value && value.includes("a")
-                  ? Promise.resolve()
-                  : Promise.reject("Password does not match criteria");
+                if (
+                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(value) // At least one lowercase, one uppercase, one number, and one special character
+                ) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(
+                  "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character"
+                );
               },
             },
           ]}

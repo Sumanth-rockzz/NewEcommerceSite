@@ -62,7 +62,7 @@ const LoginPage = () => {
         dispatch(
           authActions.login({
             token: data.idToken,
-            expirationTime: expirationTime,
+            expirationTime: expirationTime.getTime(),
           })
         );
         localStorage.setItem("token", data.idToken);
@@ -95,6 +95,7 @@ const LoginPage = () => {
         <Typography.Title>Login</Typography.Title>
         <Divider style={{ borderColor: "black", width: "5px" }}></Divider>
         <Form.Item
+          style={{ width: "50%" }}
           label="Email Id"
           name="email"
           rules={[{ required: true, message: "Please input your Email ID!" }]}
@@ -106,6 +107,7 @@ const LoginPage = () => {
           />
         </Form.Item>
         <Form.Item
+          style={{ width: "50%" }}
           label="Password"
           name="password"
           rules={[{ required: true, message: "Please input your Password!" }]}

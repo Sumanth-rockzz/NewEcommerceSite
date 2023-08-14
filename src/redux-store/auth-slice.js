@@ -4,7 +4,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     token: "",
-    expirationTime: 0,
+    expirationTime: "",
   },
   reducers: {
     login(state, action) {
@@ -13,7 +13,7 @@ const authSlice = createSlice({
     },
     logout(state, action) {
       state.token = null;
-      state.expirationTime = 0;
+      state.expirationTime = "";
     },
   },
 });

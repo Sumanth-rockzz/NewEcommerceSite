@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  addToCart,
-  getAllProducts,
-  getProductsByCategory,
-} from "../../API/API";
+import { getAllProducts, getProductsByCategory } from "../../API/API";
+import AddToCartButton from "./AddToCartButton";
 import { useParams } from "react-router-dom";
 import {
   Card,
@@ -12,10 +9,9 @@ import {
   Typography,
   Badge,
   Rate,
-  Button,
-  message,
   Select,
   Pagination,
+  Skeleton,
 } from "antd";
 import "../../App.css";
 
@@ -79,7 +75,12 @@ const Products = () => {
 
   return (
     <div className="productsContainer">
-      <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "end",
+        }}
+      >
         <h3>
           <Typography.Text>Vew Items Sorted By : </Typography.Text>
           <Select
@@ -108,55 +109,72 @@ const Products = () => {
           ></Select>
         </h3>
       </div>
-
-      <List
-        loading={loading}
-        grid={{ column: 3 }}
-        dataSource={getSortedItems()}
-        renderItem={(item, index) => {
-          return (
-            <Badge.Ribbon
-              className="itemCardBadge"
-              text={item.discountPercentage}
-              color="blue"
-            >
-              <Card
-                className="itemCard"
-                title={<h3 style={{ textAlign: "center" }}>{item.title}</h3>}
-                key={index}
-                cover={<Image className="itemCartImage" src={item.thumbnail} />}
-                actions={[
-                  <Rate allowHalf value={item.rating} disabled />,
-                  <AddToCartButton item={item} />,
-                ]}
+      {loading ? (
+        <Skeleton style={{ width: "100vw", height: "100vh" }} round active />
+      ) : (
+        <List
+          grid={{
+            gutter: 16,
+            xs: 1,
+            sm: 1,
+            md: 2,
+            lg: 2,
+            xl: 3,
+            xxl: 3,
+          }}
+          loading={loading}
+          dataSource={getSortedItems()}
+          renderItem={(item, index) => {
+            return (
+              <Badge.Ribbon
+                className="itemCardBadge"
+                text={item.discountPercentage}
+                color="blue"
               >
-                <Card.Meta
-                  title={
-                    <h3 style={{ textAlign: "center" }}>
-                      <Typography.Paragraph>
-                        Price:₹{item.price}{" "}
-                        <Typography.Text delete type="danger">
-                          {parseFloat(
-                            item.price +
-                              (item.price * item.discountPercentage) / 100
-                          ).toFixed(2)}
-                        </Typography.Text>
-                      </Typography.Paragraph>
-                    </h3>
+                <Card
+                  className="itemCard"
+                  title={<h3 style={{ textAlign: "center" }}>{item.title}</h3>}
+                  key={index}
+                  cover={
+                    <Image className="itemCartImage" src={item.thumbnail} />
                   }
-                  description=<h4 style={{ textAlign: "center" }}>
-                    <Typography.Paragraph
-                      ellipsis={{ rows: 2, expandable: true, symbol: "more" }}
-                    >
-                      {item.description}
-                    </Typography.Paragraph>
-                  </h4>
-                ></Card.Meta>
-              </Card>
-            </Badge.Ribbon>
-          );
-        }}
-      ></List>
+                  actions={[
+                    <Rate allowHalf value={item.rating} disabled />,
+                    <AddToCartButton item={item} />,
+                  ]}
+                >
+                  <Card.Meta
+                    title={
+                      <h3 style={{ textAlign: "center" }}>
+                        <Typography.Paragraph>
+                          Price:₹{item.price}{" "}
+                          <Typography.Text delete type="danger">
+                            {parseFloat(
+                              item.price +
+                                (item.price * item.discountPercentage) / 100
+                            ).toFixed(2)}
+                          </Typography.Text>
+                        </Typography.Paragraph>
+                      </h3>
+                    }
+                    description=<h4 style={{ textAlign: "center" }}>
+                      <Typography.Paragraph
+                        ellipsis={{
+                          rows: 2,
+                          expandable: true,
+                          symbol: "more",
+                        }}
+                      >
+                        {item.description}
+                      </Typography.Paragraph>
+                    </h4>
+                  ></Card.Meta>
+                </Card>
+              </Badge.Ribbon>
+            );
+          }}
+        ></List>
+      )}
       <Pagination
         total={totalCount}
         pageSize={currentLimit}
@@ -177,25 +195,8 @@ const Products = () => {
           console.log(pageSize, "....", page);
           setCurrentPage(page);
         }}
-        pa
       />
     </div>
-  );
-};
-
-const AddToCartButton = ({ item }) => {
-  const [loading, setLoading] = useState(false);
-  const addToCartHandler = () => {
-    setLoading(true);
-    addToCart(item.id).then((res) => {
-      message.success(`${item.title} has been added to cart!`);
-      setLoading(false);
-    });
-  };
-  return (
-    <Button type="link" onClick={addToCartHandler} loading={loading}>
-      <h4>Add to cart</h4>
-    </Button>
   );
 };
 
