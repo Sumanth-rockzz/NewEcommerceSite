@@ -34,7 +34,7 @@ const AppCart = () => {
       });
       dispatch(cartActions.replaceCart({ items: items }));
     });
-  }, []);
+  }, [dispatch]);
 
   const CartHandler = () => {
     setCartDrawerOpen(!cartDrawerOpen);
@@ -44,13 +44,14 @@ const AppCart = () => {
   };
 
   const onConfirmOrder = (values) => {
+    console.log(values);
     setOrderDrawerOpen(!orderDrawerOpen);
     setCartDrawerOpen(!cartDrawerOpen);
+    dispatch(cartActions.onOrder());
     message.success(
       "Order has been placed successfully and will be Delivered in 30 Min"
     );
   };
-
   return (
     <div>
       <Badge
@@ -82,15 +83,15 @@ const AppCart = () => {
                 key: 2,
                 title: "Price",
                 dataIndex: "price",
-                width: "20%",
+                width: "25%",
 
-                render: (value) => <span>₹ {value}</span>,
+                render: (value) => <div>₹ {value}</div>,
               },
               {
                 key: 3,
                 title: "Quantity",
                 dataIndex: "quantity",
-                width: "20%",
+                width: "25%",
 
                 render: (oldValue, record) => {
                   return (
@@ -142,18 +143,14 @@ const AppCart = () => {
               },
             ]}
             dataSource={cartItems}
-            summary={(data) => {
-              const total = data.reduce((prev, curr) => prev + curr.total, 0);
-              return <span>Total Cart Value is : ₹ {total}</span>;
-            }}
           ></Table>
-          <Typography.Text style={{ marginTop: "10px" }}>
+          <Typography.Text style={{ marginTop: "5px" }}>
             Total Cart Value is : ₹{totalAmount}
           </Typography.Text>
           <Button
             type="primary"
             onClick={orderHandler}
-            style={{ marginTop: "10px" }}
+            style={{ marginTop: "5px" }}
           >
             Proceed to Checkout
           </Button>

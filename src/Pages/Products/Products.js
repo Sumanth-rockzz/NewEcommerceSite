@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { getAllProducts, getProductsByCategory } from "../../API/API";
 import AddToCartButton from "./AddToCartButton";
-import { useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import {
   Card,
-  List,
   Image,
   Typography,
   Badge,
@@ -12,8 +11,14 @@ import {
   Select,
   Pagination,
   Skeleton,
+  Row,
+  Col,
+  Button,
+  Input,
 } from "antd";
 import "../../App.css";
+
+import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 
 const Products = () => {
   const { categoryId } = useParams();
@@ -29,29 +34,13 @@ const Products = () => {
     (categoryId
       ? getProductsByCategory(categoryId, currentLimit, currentPage)
       : getAllProducts(currentLimit, currentPage)
-    ) //limit and size
-      .then((res) => {
-        setItems(res.products);
-        setTotalCount(res.total);
-        setLoading(false);
-      });
+    ).then((res) => {
+      setItems(res.products);
+      setTotalCount(res.total);
+      setLoading(false);
+    });
   }, [categoryId, currentLimit, currentPage]);
 
-  //   const getSortedItems = () => {
-  //     const sortedItems = [...items];
-  //     sortedItems.sort((a, b) => {
-  //       if (sortOrder === "az") {
-  //         return a.title > b.title ? 1 : a.title === b.title ? 0 : -1;
-  //       } else if (sortOrder === "za") {
-  //         return a.title < b.title ? 1 : a.title === b.title ? 0 : -1;
-  //       } else if (sortOrder === "lowHigh") {
-  //         return a.price > b.price ? 1 : a.price === b.price ? 0 : -1;
-  //       } else if (sortOrder === "highLow") {
-  //         return a.price < b.price ? 1 : a.price === b.price ? 0 : -1;
-  //       }
-  //     });
-  //     return sortedItems;
-  //   };
   const getSortedItems = () => {
     const sortedItems = [...items];
     sortedItems.sort((a, b) => {
@@ -64,7 +53,7 @@ const Products = () => {
       }
 
       if (sortOrder === "za" || sortOrder === "highLow") {
-        comparison *= -1; // Reverse the comparison for descending order
+        comparison *= -1;
       }
 
       return comparison;
@@ -82,8 +71,21 @@ const Products = () => {
         }}
       >
         <h3>
-          <Typography.Text>Vew Items Sorted By : </Typography.Text>
+          <Typography.Text>Search the Products: </Typography.Text>
+          <Input.Search
+            loading={false}
+            placeholder="Search products..."
+            prefix={<SearchOutlined />}
+            style={{ width: "100%" }}
+            onSearch={(value) => {
+              console.log(value);
+            }}
+          />
+        </h3>
+        <h3>
+          <Typography.Text>View Items Sorted By: </Typography.Text>
           <Select
+            style={{ width: "100%" }}
             defaultValue={"az"}
             onChange={(value) => {
               setSortOrder(value);
@@ -106,26 +108,15 @@ const Products = () => {
                 value: "highLow",
               },
             ]}
-          ></Select>
+          />
         </h3>
       </div>
       {loading ? (
         <Skeleton style={{ width: "100vw", height: "100vh" }} round active />
       ) : (
-        <List
-          grid={{
-            gutter: 16,
-            xs: 1,
-            sm: 1,
-            md: 2,
-            lg: 2,
-            xl: 3,
-            xxl: 3,
-          }}
-          loading={loading}
-          dataSource={getSortedItems()}
-          renderItem={(item, index) => {
-            return (
+        <Row gutter={16}>
+          {getSortedItems().map((item, index) => (
+            <Col xs={24} sm={12} md={8} lg={6} key={index}>
               <Badge.Ribbon
                 className="itemCardBadge"
                 text={item.discountPercentage}
@@ -133,8 +124,8 @@ const Products = () => {
               >
                 <Card
                   className="itemCard"
-                  title={<h3 style={{ textAlign: "center" }}>{item.title}</h3>}
                   key={index}
+                  title={<h3 style={{ textAlign: "center" }}>{item.title}</h3>}
                   cover={
                     <Image className="itemCartImage" src={item.thumbnail} />
                   }
@@ -157,23 +148,41 @@ const Products = () => {
                         </Typography.Paragraph>
                       </h3>
                     }
-                    description=<h4 style={{ textAlign: "center" }}>
-                      <Typography.Paragraph
-                        ellipsis={{
-                          rows: 2,
-                          expandable: true,
-                          symbol: "more",
+                    description={
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          flexDirection: "column",
                         }}
                       >
-                        {item.description}
-                      </Typography.Paragraph>
-                    </h4>
-                  ></Card.Meta>
+                        <h4
+                          style={{ textAlign: "center", marginBottom: "10px" }}
+                        >
+                          <Typography.Paragraph
+                            ellipsis={{
+                              rows: 2,
+                              expandable: true,
+                              symbol: "more",
+                            }}
+                          >
+                            {item.description}
+                          </Typography.Paragraph>
+                        </h4>
+                        <Button type="link" icon={<EyeOutlined />}>
+                          <NavLink to={`/products/${item.id}`}>
+                            View Details
+                          </NavLink>
+                        </Button>
+                      </div>
+                    }
+                  />
                 </Card>
               </Badge.Ribbon>
-            );
-          }}
-        ></List>
+            </Col>
+          ))}
+        </Row>
       )}
       <Pagination
         total={totalCount}
@@ -188,11 +197,9 @@ const Products = () => {
           justifyContent: "center",
         }}
         onShowSizeChange={(page, pageSize) => {
-          console.log(pageSize, "....", page);
           setCurrentLimit(pageSize);
         }}
-        onChange={(page, pageSize) => {
-          console.log(pageSize, "....", page);
+        onChange={(page) => {
           setCurrentPage(page);
         }}
       />

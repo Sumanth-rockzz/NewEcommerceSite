@@ -6,7 +6,7 @@
     height: 100vh;
     padding: 50px;
     background-size: cover;
-    background-image: url('../../images/img2.jpg');
+    background-color: aquamarine;
   }
   
   .my-form {
@@ -40,7 +40,7 @@
     
     .my-form {
     margin-top: 50%;
-      width: 90%;
+      width: 80%;
       height:fit-content;
       padding: 10px;
       box-shadow: 0px 0px 20px 0 rgba(0, 0, 255, 0.3);

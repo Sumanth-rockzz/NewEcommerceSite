@@ -2,28 +2,10 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { menuItems } from "./MenuItems";
-import {
-  Menu,
-  Typography,
-  Badge,
-  Drawer,
-  Table,
-  Form,
-  InputNumber,
-  Input,
-  Button,
-  Checkbox,
-  message,
-  Space,
-} from "antd";
-import { getCart } from "../../API/API";
+import { Menu, Typography, Button, Space } from "antd";
 import AppCart from "./AppCart";
 import "../../App.css";
-import {
-  ShoppingCartOutlined,
-  LoginOutlined,
-  LogoutOutlined,
-} from "@ant-design/icons";
+import { LoginOutlined, LogoutOutlined } from "@ant-design/icons";
 import { authActions } from "../../redux-store/auth-slice";
 
 // const calculateRemainingTime = (expirationTime) => {
@@ -52,12 +34,12 @@ const MainMenu = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const [selectedKeys, setSelectedKeys] = useState("/home");
-  const token = useSelector((state) => state.auth.token);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+
   const navigate = useNavigate();
 
   // const tokenData = retrieveStoredToken();
 
-  const isLoggedIn = token;
   const logoutHandler = () => {
     dispatch(authActions.logout());
     localStorage.removeItem("token");
@@ -87,7 +69,12 @@ const MainMenu = () => {
   return (
     <div className="MainMenu">
       <Typography.Title
-        style={{ fontSize: "1rem", margin: "10px", fontWeight: "bold" }}
+        style={{
+          fontSize: "1rem",
+          margin: "10px",
+          fontWeight: "bold",
+          color: "blue",
+        }}
       >
         InstaMart
       </Typography.Title>
@@ -112,12 +99,19 @@ const MainMenu = () => {
           );
         })}
       </Menu>
-      <Space size={20}>
+      <Space size={20} style={{ marginRight: "15px" }}>
         {!isLoggedIn && (
           <NavLink to="/signup">
             <LoginOutlined />
             {"  "}
-            <b>Register/Login</b>
+            <b>Signup</b>
+          </NavLink>
+        )}
+        {!isLoggedIn && (
+          <NavLink to="/signup">
+            <LoginOutlined />
+            {"  "}
+            <b>Login{"   "}</b>
           </NavLink>
         )}
         {isLoggedIn && (
@@ -128,7 +122,7 @@ const MainMenu = () => {
             Logout
           </Button>
         )}
-        <AppCart />
+        {isLoggedIn && <AppCart />}
       </Space>
     </div>
   );

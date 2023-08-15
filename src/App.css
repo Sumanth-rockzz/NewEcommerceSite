@@ -2,8 +2,15 @@
     display: flex;
     flex-direction: column;
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
 }
+.AppHeader {
+    height: 60px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: white;
+  }
 .MainMenu{
     height: 60px;
     display: flex;
@@ -19,11 +26,10 @@
 .PageContent{
     display: flex;
     flex:1;
-    overflow-y: auto;
+    overflow-y:auto;
     margin-top: 3px;
     margin-bottom: 3px;
-
-    
+    padding:10px;
 }
 .AppFooter{
     height: 60px;

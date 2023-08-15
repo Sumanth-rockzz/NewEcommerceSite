@@ -17,7 +17,7 @@ function App() {
         expirationTime: expirationTime,
       })
     );
-  }, []);
+  }, [dispatch]);
   return (
     <div className="App">
       <AppHeader />

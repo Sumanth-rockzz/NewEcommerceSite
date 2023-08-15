@@ -2,7 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const cartSlice = createSlice({
   name: "cart",
-  initialState: { items: [], totalQuantity: 0, totalAmount: 0, changed: false },
+  initialState: {
+    items: [],
+    orderedItemDetails: [],
+    totalQuantity: 0,
+    totalAmount: 0,
+    changed: false,
+  },
   reducers: {
     replaceCart(state, action) {
       state.items = action.payload.items;
@@ -48,7 +54,8 @@ const cartSlice = createSlice({
       );
       state.changed = true;
     },
-    onOrder(state) {
+    onOrder(state, action) {
+      state.orderedItemDetails.push([...state.items]);
       state.items = [];
       state.totalAmount = 0;
       state.totalQuantity = 0;

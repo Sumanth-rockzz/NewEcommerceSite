@@ -16,6 +16,12 @@ export const getAllProducts = (limit, pageNumber) => {
   ).then((res) => res.json());
 };
 
+export const getSingleProduct = (id) => {
+  return fetch(`https://dummyjson.com/products/${id}`).then((res) =>
+    res.json()
+  );
+};
+
 export const addToCart = (id) => {
   return fetch("https://dummyjson.com/carts/add", {
     method: "POST",
