@@ -21,7 +21,6 @@ const ContactUsPage = () => {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "aquamarine",
       }}
     >
       <Form

@@ -8,6 +8,7 @@ import ContactUsPage from "../../Pages/ContactUsPage/ContactUsPage";
 import HomePage from "../../Pages/HomePage/HomePage";
 import MyOrders from "../../Pages/MyOrders/MyOrders";
 import SingleProductPage from "../../Pages/SingleProductPage/SingleProductPage";
+import PrivateRoute from "./PrivateRoute";
 
 const AppRoutes = () => {
   return (
@@ -23,7 +24,14 @@ const AppRoutes = () => {
       <Route path="/login" element={<LoginPage />}></Route>
       <Route path="/about-us" element={<AboutUsPage />}></Route>
       <Route path="/contact-us" element={<ContactUsPage />}></Route>
-      <Route path="/my-orders" element={<MyOrders />}></Route>
+      <Route
+        path="/my-orders"
+        element={
+          <PrivateRoute>
+            <MyOrders />
+          </PrivateRoute>
+        }
+      />
       <Route path="*" element={<h1>OOPS page not found!!</h1>}></Route>
     </Routes>
   );

@@ -25,7 +25,7 @@
 }
 .PageContent{
     display: flex;
-    flex:1;
+    flex:3;
     overflow-y:auto;
     margin-top: 3px;
     margin-bottom: 3px;

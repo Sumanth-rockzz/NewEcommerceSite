@@ -11,7 +11,6 @@ const AboutUsPage = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        backgroundColor: "aquamarine",
       }}
     >
       <Title>About Our InstaMart</Title>
@@ -24,7 +23,7 @@ const AboutUsPage = () => {
         Our team is dedicated to offering you the latest trends and the best
         deals. Whether you're looking for clothing, electronics, home goods, or
         more, we've got you covered. We pride ourselves on excellent customer
-        service, secure transactions, and prompt delivery to your doorstep.
+        service and secure transactions
       </Paragraph>
       <Paragraph>
         As part of our commitment to customer satisfaction, we offer easy

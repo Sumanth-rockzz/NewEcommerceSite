@@ -34,7 +34,8 @@ const MainMenu = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const [selectedKeys, setSelectedKeys] = useState("/home");
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const token = useSelector((state) => state.auth.token);
+  const isLoggedIn = !!token;
 
   const navigate = useNavigate();
 
@@ -99,7 +100,7 @@ const MainMenu = () => {
           );
         })}
       </Menu>
-      <Space size={20} style={{ marginRight: "15px" }}>
+      <Space size={20} style={{ marginRight: "30px" }}>
         {!isLoggedIn && (
           <NavLink to="/signup">
             <LoginOutlined />
@@ -108,7 +109,7 @@ const MainMenu = () => {
           </NavLink>
         )}
         {!isLoggedIn && (
-          <NavLink to="/signup">
+          <NavLink to="/login">
             <LoginOutlined />
             {"  "}
             <b>Login{"   "}</b>

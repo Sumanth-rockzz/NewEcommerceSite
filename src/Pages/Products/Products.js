@@ -62,6 +62,67 @@ const Products = () => {
     return sortedItems;
   };
 
+  const productsCard = getSortedItems().map((item, index) => (
+    <Col xs={24} sm={12} md={8} lg={6} key={index}>
+      <Badge.Ribbon
+        className="itemCardBadge"
+        text={item.discountPercentage}
+        color="blue"
+      >
+        <Card
+          className="itemCard"
+          key={index}
+          title={<h3 style={{ textAlign: "center" }}>{item.title}</h3>}
+          cover={<Image className="itemCartImage" src={item.thumbnail} />}
+          actions={[
+            <Rate allowHalf value={item.rating} disabled />,
+            <AddToCartButton item={item} />,
+          ]}
+        >
+          <Card.Meta
+            title={
+              <h3 style={{ textAlign: "center" }}>
+                <Typography.Paragraph>
+                  Price:₹{item.price}{" "}
+                  <Typography.Text delete type="danger">
+                    {parseFloat(
+                      item.price + (item.price * item.discountPercentage) / 100
+                    ).toFixed(2)}
+                  </Typography.Text>
+                </Typography.Paragraph>
+              </h3>
+            }
+            description={
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                }}
+              >
+                <h4 style={{ textAlign: "center", marginBottom: "10px" }}>
+                  <Typography.Paragraph
+                    ellipsis={{
+                      rows: 2,
+                      expandable: true,
+                      symbol: "more",
+                    }}
+                  >
+                    {item.description}
+                  </Typography.Paragraph>
+                </h4>
+                <Button type="link" icon={<EyeOutlined />}>
+                  <NavLink to={`/products/${item.id}`}>View Details</NavLink>
+                </Button>
+              </div>
+            }
+          />
+        </Card>
+      </Badge.Ribbon>
+    </Col>
+  ));
+
   return (
     <div className="productsContainer">
       <div
@@ -114,75 +175,7 @@ const Products = () => {
       {loading ? (
         <Skeleton style={{ width: "100vw", height: "100vh" }} round active />
       ) : (
-        <Row gutter={16}>
-          {getSortedItems().map((item, index) => (
-            <Col xs={24} sm={12} md={8} lg={6} key={index}>
-              <Badge.Ribbon
-                className="itemCardBadge"
-                text={item.discountPercentage}
-                color="blue"
-              >
-                <Card
-                  className="itemCard"
-                  key={index}
-                  title={<h3 style={{ textAlign: "center" }}>{item.title}</h3>}
-                  cover={
-                    <Image className="itemCartImage" src={item.thumbnail} />
-                  }
-                  actions={[
-                    <Rate allowHalf value={item.rating} disabled />,
-                    <AddToCartButton item={item} />,
-                  ]}
-                >
-                  <Card.Meta
-                    title={
-                      <h3 style={{ textAlign: "center" }}>
-                        <Typography.Paragraph>
-                          Price:₹{item.price}{" "}
-                          <Typography.Text delete type="danger">
-                            {parseFloat(
-                              item.price +
-                                (item.price * item.discountPercentage) / 100
-                            ).toFixed(2)}
-                          </Typography.Text>
-                        </Typography.Paragraph>
-                      </h3>
-                    }
-                    description={
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          flexDirection: "column",
-                        }}
-                      >
-                        <h4
-                          style={{ textAlign: "center", marginBottom: "10px" }}
-                        >
-                          <Typography.Paragraph
-                            ellipsis={{
-                              rows: 2,
-                              expandable: true,
-                              symbol: "more",
-                            }}
-                          >
-                            {item.description}
-                          </Typography.Paragraph>
-                        </h4>
-                        <Button type="link" icon={<EyeOutlined />}>
-                          <NavLink to={`/products/${item.id}`}>
-                            View Details
-                          </NavLink>
-                        </Button>
-                      </div>
-                    }
-                  />
-                </Card>
-              </Badge.Ribbon>
-            </Col>
-          ))}
-        </Row>
+        <Row gutter={16}>{productsCard}</Row>
       )}
       <Pagination
         total={totalCount}
