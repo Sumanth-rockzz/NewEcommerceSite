@@ -8,6 +8,8 @@ import { authActions } from "./redux-store/auth-slice";
 
 function App() {
   const dispatch = useDispatch();
+  
+
   useEffect(() => {
     const token = localStorage.getItem("token") || null;
     const expirationTime = localStorage.getItem("expirationTime") || 0;
